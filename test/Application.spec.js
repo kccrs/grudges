@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { expect, assert } from 'chai';
-import Application from '../lib/components/Application';
+import Application from '../components/Application';
 
 describe('application', () => {
   it('renders as a <section>', () => {
