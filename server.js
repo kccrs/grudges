@@ -1,30 +1,74 @@
-var webpack = require('webpack');
-var WebpackDevServer = require('webpack-dev-server');
-var config = require('./webpack.config');
+'use strict';
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const path = require('path');
+const fs = require('fs');
 
-new WebpackDevServer(webpack(config), {
-    publicPath: config.output.publicPath,
-    hot: true,
-    historyApiFallback: true,
-    // It suppresses error shown in console, so it has to be set to false.
-    quiet: false,
-    // It suppresses everything except error, so it has to be set to false as well
-    // to see success build.
-    noInfo: false,
-    stats: {
-      // Config for minimal console.log mess.
-      assets: false,
-      colors: true,
-      version: false,
-      hash: false,
-      timings: false,
-      chunks: false,
-      chunkModules: false
-    }
-}).listen(3000, 'localhost', function (err) {
-    if (err) {
-        console.log(err);
-    }
+const fetchTitle = (longURL, callback) => {
+ request(longURL, (error, externalResponse, body) => {
+    if (error) { return callback(error); }
 
-  console.log('Listening at localhost:3000');
+    let $ = cheerio.load(body);
+    let title = $('head > title').text();
+
+    callback(null, title);
+  });
+};
+
+app.locals.URLs = {};
+
+app.use(express.static('public'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.set('port', process.env.PORT || 3000);
+app.locals.title = 'Jet Fuel';
+const host = `http://localhost:${app.get('port')}/`;
+
+app.get('/', (request, response) => {
+  response.sendFile(path.join(__dirname, 'public/index.html'));
 });
+
+app.get('/api/URLs/', (request, response) => {
+  const URLs = app.locals.URLs;
+  response.status(201).json({ URLs });
+});
+
+app.post('/api/URLs', (request, response) => {
+  let { longURL } = request.body;
+  longURL = normalizeUrl(longURL);
+  let shortURL = shortid.generate(longURL);
+  let dateCreated = Date.now();
+  let clicks = 0;
+
+  if(!longURL) {
+    return response.status(422).send({
+      error: 'No URL specified'
+    });
+  }
+
+  fetchTitle(longURL, (error, title) => {
+    if (error) { return response.status(422).send(error); }
+    app.locals.URLs[shortURL] = { title, shortURL, longURL, dateCreated, clicks };
+    let fullShortenedURL = host + shortURL;
+    response.status(201).json({ fullShortenedURL, longURL });
+  });
+});
+
+app.get('/:shortURL', (request, response) => {
+  const { shortURL } = request.params;
+  const link = app.locals.URLs[shortURL];
+
+  if (!link) { return response.status(404).send('No such link, bozo.'); }
+  link.clicks += 1;
+  let longURL = link.longURL;
+
+  response.status(302).redirect(longURL);
+});
+
+app.listen(app.get('port'), () => {
+  console.log(`${app.locals.title} is running on ${app.get('port')}.`);
+});
+
+module.exports = app;
