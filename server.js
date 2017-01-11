@@ -2,73 +2,80 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const md5 = require('md5');
+const cors = require('express-cors');
 const path = require('path');
 const fs = require('fs');
 
-const fetchTitle = (longURL, callback) => {
- request(longURL, (error, externalResponse, body) => {
-    if (error) { return callback(error); }
-
-    let $ = cheerio.load(body);
-    let title = $('head > title').text();
-
-    callback(null, title);
-  });
-};
-
-app.locals.URLs = {};
-
-app.use(express.static('public'));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.set('port', process.env.PORT || 3000);
-app.locals.title = 'Jet Fuel';
-const host = `http://localhost:${app.get('port')}/`;
+app.use(express.static('public'));
 
-app.get('/', (request, response) => {
-  response.sendFile(path.join(__dirname, 'public/index.html'));
-});
+app.set('port', process.env.PORT || 3001);
 
-app.get('/api/URLs/', (request, response) => {
-  const URLs = app.locals.URLs;
-  response.status(201).json({ URLs });
-});
-
-app.post('/api/URLs', (request, response) => {
-  let { longURL } = request.body;
-  longURL = normalizeUrl(longURL);
-  let shortURL = shortid.generate(longURL);
-  let dateCreated = Date.now();
-  let clicks = 0;
-
-  if(!longURL) {
-    return response.status(422).send({
-      error: 'No URL specified'
-    });
+app.locals.title = 'Grudge Match';
+app.locals.grudges = [
+  {
+    id: 4,
+    name: 'Casey',
+    offense: 'letting this assessment get to you',
+    forgiven: false
+  },
+  {
+    id: 17,
+    name: 'doubt',
+    offense: 'being a jerk',
+    forgiven: false
   }
-
-  fetchTitle(longURL, (error, title) => {
-    if (error) { return response.status(422).send(error); }
-    app.locals.URLs[shortURL] = { title, shortURL, longURL, dateCreated, clicks };
-    let fullShortenedURL = host + shortURL;
-    response.status(201).json({ fullShortenedURL, longURL });
-  });
-});
-
-app.get('/:shortURL', (request, response) => {
-  const { shortURL } = request.params;
-  const link = app.locals.URLs[shortURL];
-
-  if (!link) { return response.status(404).send('No such link, bozo.'); }
-  link.clicks += 1;
-  let longURL = link.longURL;
-
-  response.status(302).redirect(longURL);
-});
+];
 
 app.listen(app.get('port'), () => {
-  console.log(`${app.locals.title} is running on ${app.get('port')}.`);
+  console.log(`${app.locals.title} is running on ${app.get('port')}`);
+});
+
+app.get('/', (request, response) => {
+  response.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
+});
+
+
+app.get('/grudges', (request, response) => {
+  // response.send({ grudges: app.locals.grudges });
+  response.json(app.locals.grudges);
+});
+//
+// app.get('/grudges/:id', (request, response) => {
+//   let { id } = request.params;
+//
+//   let grudge = app.locals.grudges.find(g => g.id == id);
+//   if (grudge) { return response.send({ grudge }); }
+//   else { return response.sendStatus(404); }
+//   // if (!grudge) { return response.sendStatus(404); }
+//
+//   // response.json({ id, grudge });
+// });
+
+app.post('/grudges', (request, response) => {
+
+  // const { name, offense } = request.body;
+  const newGrudge = {
+    id: md5(newGrudge),
+    name: request.body.name,
+    offense: request.body.offense,
+    forgave: false
+  };
+
+  if (!newGrudge) {
+    return response.status(422).send({
+      error: 'No grudges today?'
+    });
+  }
+  app.locals.grudges.push(newGrudge);
+  // return response.send({ grudge, id });
+  // app.locals.grudges[id] = grudge;
+  response.json(app.locals.grudges);
+  // response.status(201).json({ id, grudge });
 });
 
 module.exports = app;

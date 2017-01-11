@@ -1,34 +1,17 @@
 import React, { Component } from 'react';
 import Grudge from './Grudge';
 
-export default class GrudgeList extends Component {
-
-  // const { updateCount, user } = this.props;
-  // const { dateFilter } = this.state;
-  // return map(spikes, (spike) => {
-  //   if(spike.appr) {
-  //       if(moment(spike.spikeDate).format('MM-DD-YYYY') === moment(dateFilter).format('MM-DD-YYYY')) {
-  //       return (
-  //         <Spike
-  //           spike={spike}
-  //           key={spike.key}
-  //           updateCount={updateCount}
-  //           user={user}
-  //           attending={this.props.attending}
-  //         />
-  //       )
-  //     }
-  //   }
-
-  render() {
+const GrudgeList = ({ grudges }) => {
+  if (grudges) {
     return (
       <section className="GrudgeList">
         <h1>Grudge List</h1>
         <ul className="AllTheGrudges">
           {this.props.grudges.map(g =>
             <Grudge
-              key={g.key}
-              grudge={g}
+              id={g.id}
+              offense={g.offense}
+              name={g.name}
             />)
           }
         </ul>
@@ -39,5 +22,13 @@ export default class GrudgeList extends Component {
         </article>
       </section>
     );
+  } else {
+    return (
+      <section className='GrudgeList'>
+        <h2>Looky there, no grudges!</h2>
+      </section>
+    )
   }
-}
+};
+
+export default GrudgeList;

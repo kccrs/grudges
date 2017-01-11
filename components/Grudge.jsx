@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-const Grudge = ({ grudge, createGrudge, updateCount }) => {
+const Grudge = ({ grudge, updateCount }) => {
 
   if (grudge) {
     return (
@@ -15,10 +15,12 @@ const Grudge = ({ grudge, createGrudge, updateCount }) => {
             onClick={() => {
               updateCount(grudge);
             }}>
-            {attending && grudge.key === attending.key ? 'Leave' : 'Join'}
+            Forgive?
           </button>
         </section>
       </section>
     );
   }
 }
+
+export default Grudge;

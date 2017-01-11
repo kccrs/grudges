@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-
+import axios from 'axios';
 import GrudgeList from './GrudgeList';
+import Grudge from './Grudge';
 import CreateGrudge from './CreateGrudge';
 
 export default class Application extends Component {
@@ -14,55 +15,85 @@ export default class Application extends Component {
     };
   }
 
+  componentDidMount() {
+    console.log(this.state.grudges);
+    this.getGrudges();
+  }
+
+  getGrudges() {
+    axios.get('/grudges')
+    .then((response) => {
+      this.setState({
+        grudges: response.data.grudges
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
+  postGrudges(e) {
+    e.preventDefault();
+    let { name, offense } = e.target;
+    axios.post('/post', {
+      name: name.value,
+      offense: offense.value,
+      forgave: false,
+      createdAt: Date.now(),
+    })
+    .then((response) => {
+      this.setState({
+        grudges: response.data.grudges
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
   createGrudge(e) {
     e.preventDefault();
-    let { title, description, grudgeDate, hosts, notes } = e.target;
-    if (title.value && description.value && grudgeDate.value) {
+    let { name, offense } = e.target;
+    if (name.value && offense.value) {
       let grudge = {
-        title: this.sanitizeInput(title.value),
-        description: this.sanitizeInput(description.value),
-        location: '',
-        appr: false,
+        name: name.value,
+        offense: offense.value,
+        forgave: false,
         createdAt: Date.now(),
-        createdBy: this.sanitizeInput(user.email),
-        hosts: this.sanitizeInput(hosts.value),
-        attendees: [],
-        grudgeDate: new Date(grudgeDate.value).getTime(),
-        notes: this.sanitizeInput(notes.value)
       };
-      reference.push(grudge);
-      document.getElementById('ProposalForm').reset();
+      this.postGrudges(e);
+      this.getGrudges();
     } else {
-      alert('description and title required');
+      alert('grudge info required');
     }
   }
 
 
-  // updateCount(grudge) {
-  //     const user = this.state.user;
-  //     if (!grudge.attendees) {
-  //       let attendees = [];
-  //       attendees.push(user.email);
-  //       this.updateSpike(grudge, 'attendees', attendees);
-  //       this.updateAttending(grudge);
-  //     }
-  //     else if (grudge.attendees.includes(user.email)) {
-  //       this.updateAttending();
-  //     }
-  //     else {
-  //       let attendees = grudge.attendees.concat(user.email);
-  //       this.updateSpike(grudge, 'attendees', attendees);
-  //       this.updateAttending(grudge);
-  //     }
-  //   }
+  updateCount() {
+
+  }
+
 
   render() {
     return (
-      <section className="Application">
-        <h1>Who has Wronged Me?</h1>
-        <CreateGrudge />
-        <GrudgeList />
-      </section>
+      this.state.grudges ?
+        <section className="Application">
+          <h1>Who has Wronged Me?</h1>
+          <CreateGrudge />
+          <section className="all-questions">
+            { this.state.grudges.map(g =>
+              <Grudge
+                offense={g.offense}
+                name={g.name}
+              />)}
+          </section>
+        </section>
+          :
+        <section>
+          <h1>Who has Wronged Me?</h1>
+          <CreateGrudge />
+          <h3>There are no grudges</h3>
+        </section>
     );
   }
 }

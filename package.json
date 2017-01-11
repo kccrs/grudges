@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "node-start": "node server",
+    "server start": "node server",
     "build": "webpack",
     "start": "webpack-dev-server",
     "test": "mocha --compilers js:babel-register --require test/helpers/setup.js --recursive"
@@ -22,12 +22,15 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "express-cors": "0.0.3",
+    "md5": "^2.2.1",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-router": "^4.0.0-alpha.3",
     "request": "^2.79.0"
   },
   "devDependencies": {
+    "axios": "^0.15.3",
     "babel": "^6.5.2",
     "babel-core": "^6.17.0",
     "babel-eslint": "^7.0.0",
@@ -54,5 +57,6 @@
     "url-loader": "^0.5.7",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.2"
-  }
+  },
+  "proxy": "http://localhost:3001"
 }
