@@ -1,24 +1,48 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 export default class CreateGrudge extends Component {
+  constructor() {
+    super();
+    this.state = {
+      newGrudge: {},
+    };
+  }
+
+  createGrudge(e) {
+    e.preventDefault();
+    let { name, offense } = e.target;
+    axios.post('/grudges', {
+      name: name.value,
+      offense: offense.value,
+      forgave: false,
+    })
+    .then((response) => {
+      console.log(response, 'success');
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
   render() {
     return (
       <section className="CreateGrudge">
-        <h1>Track that Grudge</h1>
+        <h1>Track that Grudge!</h1>
         <form
-          id='ProposalForm'
-          name='create-spike'
+          id='GrudgeForm'
+          name='create-grudge'
           onSubmit={(e)=> {
-            createSpike(e)
+            this.createGrudge(e)
           }}
         >
           <label>
-            The sinner:
-            <input placeholder='Who has wronged me?' name='name' />
+            The offender:
+            <input placeholder='Who has wronged me?' name='name' aria-label='Name of the person who has wronged you.'/>
           </label>
           <label>
-            The sin:
-            <textarea placeholder='What have they done?' name='offense' />
+            The offense:
+            <textarea placeholder='My god! What have they done?' name='offense' aria-label='Name of the offense done to you'/>
           </label>
           <section className="ButtonContainer">
             <button
@@ -27,17 +51,9 @@ export default class CreateGrudge extends Component {
             >
               Submit
             </button>
-            <button
-              className='CancelButton'
-              onClick={(e) => {
-                e.preventDefault();
-              }}
-            >
-              Cancel
-            </button>
           </section>
         </form>
       </section>
-    );
+    )
   }
 }
