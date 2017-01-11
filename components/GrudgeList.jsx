@@ -21,7 +21,7 @@ const GrudgeList = ({ grudges }) => {
   } else {
     return (
       <section className='GrudgeList'>
-        <h2>Looky there, no grudges!</h2>
+        <h2>Karma is in balance.</h2>
       </section>
     )
   }
