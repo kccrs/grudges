@@ -62,7 +62,7 @@ export default class Application extends Component {
           <h3>There are no grudges</h3>
           <GrudgeList />
           <article className="GrudgeCounts">
-            <p>How many of these ding dongs have wronged me?<span> {this.state.offenders}</span></p>
+            <p>How many of these ding dongs done me wrong?<span> {this.state.offenders}</span></p>
             <p>How many have I forgiven?<span>{this.state.forgiven}</span></p>
             <p>How many have yet to earn my forgiveness?<span>{this.state.unforgiven}</span></p>
           </article>
