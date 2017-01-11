@@ -29597,7 +29597,7 @@
 	          _react2.default.createElement(
 	            'p',
 	            null,
-	            'How many of these ding dongs done me wrong?',
+	            'How many of these ding dongs have done me wrong?',
 	            _react2.default.createElement(
 	              'span',
 	              null,
