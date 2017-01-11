@@ -4,7 +4,6 @@ import { render } from 'react-dom';
 import Application from './components/Application';
 import { BrowserRouter, Match } from 'react-router';
 
-
 const Root = () => {
   return(
     <BrowserRouter>

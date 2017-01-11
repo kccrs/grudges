@@ -1,0 +1,30 @@
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.Application {
+  background-color: $primary-color-light;
+  color: $primary-text-color;
+  font-size: 24px;
+  height: 100vh;
+  text-align: center;
+}
+
+header {
+  background-color: $primary-color;
+  border-bottom: 2px solid $divider-color;
+  color: $primary-color-text;
+  font-size: 30px;
+  height: 100px;
+  h1 {
+    margin-top: 20px;
+  }
+}
+
+p {
+
+}
+
+span {
+  margin-left: 10px;
+}

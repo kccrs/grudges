@@ -12,14 +12,10 @@ const GrudgeList = ({ grudges }) => {
               id={g.id}
               offense={g.offense}
               name={g.name}
+              forgave={g.forgave}
             />)
           }
         </ul>
-        <article className="GrudgeCounts">
-          <p>How many of these ding dongs have wronged me?</p>
-          <p>How many of these ding dongs have I forgiven?</p>
-          <p>How many of these ding dongs have yet to earn my forgiveness?</p>
-        </article>
       </section>
     );
   } else {

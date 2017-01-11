@@ -29516,7 +29516,7 @@
 
 	    _this.state = {
 	      grudges: [],
-	      dingDongs: 0,
+	      offenders: 0,
 	      forgiven: 0,
 	      unforgiven: 0
 	    };
@@ -29526,6 +29526,7 @@
 	  _createClass(Application, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
+	      console.log(this.state.grudges);
 	      this.getGrudges();
 	    }
 	  }, {
@@ -29542,60 +29543,8 @@
 	      });
 	    }
 	  }, {
-	    key: 'postGrudges',
-	    value: function postGrudges(grudge) {
-	      var _this3 = this;
-
-	      _axios2.default.post('/grudges', {
-	        grudge: grudge
-	      }).then(function (response) {
-	        console.log(response);
-	        console.log(grudge);
-	        _this3.getGrudges();
-	      }).catch(function (error) {
-	        console.log(error);
-	      });
-	    }
-	  }, {
-	    key: 'createGrudge',
-	    value: function createGrudge(e) {
-	      e.preventDefault();
-	      var _e$target = e.target,
-	          name = _e$target.name,
-	          offense = _e$target.offense;
-
-	      if (name.value && offense.value) {
-	        var grudge = {
-	          name: name.value,
-	          offense: offense.value,
-	          forgave: false,
-	          createdAt: Date.now()
-	        };
-	        this.postGrudges(grudge);
-	        this.getGrudges();
-	      } else {
-	        alert('grudge info required');
-	      }
-	    }
-
-	    // updateCount(grudge) {
-	    //     const user = this.state.user;
-	    //     if (!grudge.attendees) {
-	    //       let attendees = [];
-	    //       attendees.push(user.email);
-	    //       this.updateGrudge(grudge, 'attendees', attendees);
-	    //       this.updateAttending(grudge);
-	    //     }
-	    //     else if (grudge.attendees.includes(user.email)) {
-	    //       this.updateAttending();
-	    //     }
-	    //     else {
-	    //       let attendees = grudge.attendees.concat(user.email);
-	    //       this.updateGrudge(grudge, 'attendees', attendees);
-	    //       this.updateAttending(grudge);
-	    //     }
-	    //   }
-
+	    key: 'updateOffenders',
+	    value: function updateOffenders() {}
 	  }, {
 	    key: 'render',
 	    value: function render() {
@@ -29603,9 +29552,13 @@
 	        'section',
 	        { className: 'Application' },
 	        _react2.default.createElement(
-	          'h1',
+	          'header',
 	          null,
-	          'Who has Wronged Me?'
+	          _react2.default.createElement(
+	            'h1',
+	            null,
+	            'Who has Wronged Me?'
+	          )
 	        ),
 	        _react2.default.createElement(_CreateGrudge2.default, null),
 	        _react2.default.createElement(
@@ -29613,25 +29566,65 @@
 	          { className: 'all-questions' },
 	          this.state.grudges.map(function (g) {
 	            return _react2.default.createElement(_Grudge2.default, {
-	              key: g.id,
 	              offense: g.offense,
-	              name: g.name
+	              name: g.name,
+	              forgave: g.forgave
 	            });
 	          })
 	        )
 	      ) : _react2.default.createElement(
 	        'section',
-	        null,
+	        { className: 'Application' },
 	        _react2.default.createElement(
-	          'h1',
+	          'header',
 	          null,
-	          'Who has Wronged Me?'
+	          _react2.default.createElement(
+	            'h1',
+	            null,
+	            'Who has Wronged Me?'
+	          )
 	        ),
 	        _react2.default.createElement(_CreateGrudge2.default, null),
 	        _react2.default.createElement(
 	          'h3',
 	          null,
 	          'There are no grudges'
+	        ),
+	        _react2.default.createElement(_GrudgeList2.default, null),
+	        _react2.default.createElement(
+	          'article',
+	          { className: 'GrudgeCounts' },
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            'How many of these ding dongs have wronged me?',
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              ' ',
+	              this.state.offenders
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            'How many of these ding dongs have I forgiven?',
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              this.state.forgiven
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            'How many of these ding dongs have yet to earn my forgiveness?',
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              this.state.unforgiven
+	            )
+	          )
 	        )
 	      );
 	    }
@@ -31170,28 +31163,10 @@
 	          return _react2.default.createElement(_Grudge2.default, {
 	            id: g.id,
 	            offense: g.offense,
-	            name: g.name
+	            name: g.name,
+	            forgave: g.forgave
 	          });
 	        })
-	      ),
-	      _react2.default.createElement(
-	        'article',
-	        { className: 'GrudgeCounts' },
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          'How many of these ding dongs have wronged me?'
-	        ),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          'How many of these ding dongs have I forgiven?'
-	        ),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          'How many of these ding dongs have yet to earn my forgiveness?'
-	        )
 	      )
 	    );
 	  } else {
@@ -31252,7 +31227,7 @@
 	      _react2.default.createElement(
 	        "p",
 	        null,
-	        "what the hell were they thinking?: ",
+	        "what the heck were they thinking?: ",
 	        _react2.default.createElement(
 	          "span",
 	          null,
@@ -31293,64 +31268,109 @@
 	  value: true
 	});
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _react = __webpack_require__(299);
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _axios = __webpack_require__(476);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var CreateGrudge = function CreateGrudge(_ref) {
-	  var grudge = _ref.grudge,
-	      grudges = _ref.grudges,
-	      createGrudge = _ref.createGrudge,
-	      updateCount = _ref.updateCount;
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	  return _react2.default.createElement(
-	    'section',
-	    { className: 'CreateGrudge' },
-	    _react2.default.createElement(
-	      'h1',
-	      null,
-	      'Track that Grudge!'
-	    ),
-	    _react2.default.createElement(
-	      'form',
-	      {
-	        id: 'GrudgeForm',
-	        name: 'create-grudge',
-	        onSubmit: function onSubmit(e) {
-	          console.log(undefined.props.grudges);
-	          createGrudge(e);
-	        }
-	      },
-	      _react2.default.createElement(
-	        'label',
-	        null,
-	        'The sinner:',
-	        _react2.default.createElement('input', { placeholder: 'Who has wronged me?', name: 'name' })
-	      ),
-	      _react2.default.createElement(
-	        'label',
-	        null,
-	        'The sin:',
-	        _react2.default.createElement('textarea', { placeholder: 'My god! What have they done?', name: 'offense' })
-	      ),
-	      _react2.default.createElement(
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var CreateGrudge = function (_Component) {
+	  _inherits(CreateGrudge, _Component);
+
+	  function CreateGrudge() {
+	    _classCallCheck(this, CreateGrudge);
+
+	    var _this = _possibleConstructorReturn(this, (CreateGrudge.__proto__ || Object.getPrototypeOf(CreateGrudge)).call(this));
+
+	    _this.state = {
+	      newGrudge: {}
+	    };
+	    return _this;
+	  }
+
+	  _createClass(CreateGrudge, [{
+	    key: 'createGrudge',
+	    value: function createGrudge(e) {
+	      e.preventDefault();
+	      var _e$target = e.target,
+	          name = _e$target.name,
+	          offense = _e$target.offense;
+
+	      _axios2.default.post('/grudges', {
+	        name: name.value,
+	        offense: offense.value,
+	        forgave: false
+	      }).then(function (response) {
+	        console.log(response, 'success');
+	      }).catch(function (error) {
+	        console.log(error);
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      return _react2.default.createElement(
 	        'section',
-	        { className: 'ButtonContainer' },
+	        { className: 'CreateGrudge' },
 	        _react2.default.createElement(
-	          'button',
+	          'h1',
+	          null,
+	          'Track that Grudge!'
+	        ),
+	        _react2.default.createElement(
+	          'form',
 	          {
-	            className: 'SubmitButton',
-	            type: 'submit'
+	            id: 'GrudgeForm',
+	            name: 'create-grudge',
+	            onSubmit: function onSubmit(e) {
+	              _this2.createGrudge(e);
+	            }
 	          },
-	          'Submit'
+	          _react2.default.createElement(
+	            'label',
+	            null,
+	            'The offender:',
+	            _react2.default.createElement('input', { placeholder: 'Who has wronged me?', name: 'name', 'aria-label': 'Name of the person who has wronged you.' })
+	          ),
+	          _react2.default.createElement(
+	            'label',
+	            null,
+	            'The offense:',
+	            _react2.default.createElement('textarea', { placeholder: 'My god! What have they done?', name: 'offense', 'aria-label': 'Name of the offense done to you' })
+	          ),
+	          _react2.default.createElement(
+	            'section',
+	            { className: 'ButtonContainer' },
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                className: 'SubmitButton',
+	                type: 'submit'
+	              },
+	              'Submit'
+	            )
+	          )
 	        )
-	      )
-	    )
-	  );
-	};
+	      );
+	    }
+	  }]);
+
+	  return CreateGrudge;
+	}(_react.Component);
 
 	exports.default = CreateGrudge;
 
@@ -35301,7 +35321,7 @@
 
 
 	// module
-	exports.push([module.id, "/* http://meyerweb.com/eric/tools/css/reset/\n   v2.0 | 20110126\n   License: none (public domain)\n*/\nhtml, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\n*, *:before, *:after {\n  box-sizing: inherit; }\n", ""]);
+	exports.push([module.id, "/* http://meyerweb.com/eric/tools/css/reset/\n   v2.0 | 20110126\n   License: none (public domain)\n*/\nhtml, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\n/* Palette generated by Material Palette - materialpalette.com/indigo/grey */\n*, *:before, *:after {\n  box-sizing: inherit; }\n\n.Application {\n  background-color: #C5CAE9;\n  color: #212121;\n  font-size: 24px;\n  height: 100vh;\n  text-align: center; }\n\nheader {\n  background-color: #3F51B5;\n  border-bottom: 2px solid #BDBDBD;\n  color: #FFFFFF;\n  font-size: 30px;\n  height: 100px; }\n  header h1 {\n    margin-top: 20px; }\n\nspan {\n  margin-left: 10px; }\n\n.CreateGrudge {\n  background-color: #9E9E9E;\n  width: 70%;\n  margin-top: 30px; }\n\nbutton {\n  background-color: #303F9F;\n  color: #FFFFFF;\n  width: 75px; }\n\nlabel {\n  margin: 20px; }\n\ninput,\ntextarea {\n  font-size: 16px;\n  margin: 20px;\n  width: 200px; }\n", ""]);
 
 	// exports
 

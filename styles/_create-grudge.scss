@@ -1,0 +1,22 @@
+.CreateGrudge {
+  background-color: $accent-color;
+  width: 70%;
+  margin-top: 30px;
+}
+
+button {
+  background-color: $primary-color-dark;
+  color: $primary-color-text;
+  width: 75px;
+}
+
+label {
+  margin: 20px;
+}
+
+input,
+textarea {
+  font-size: 16px;
+  margin: 20px;
+  width: 200px;
+}
